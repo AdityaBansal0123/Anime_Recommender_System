@@ -1,0 +1,8 @@
+[core]
+    remote = gcsremote
+['remote "myremote"']
+    url = gs://my-dvc-bucket988/
+['remote "myremote1"']
+    url = gs://my-dvc-bucket988/
+['remote "gcsremote"']
+    url = gs://my-dvc-bucket988
