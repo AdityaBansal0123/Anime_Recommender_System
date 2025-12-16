@@ -2,6 +2,9 @@ pipeline{
     agent any
     environment{
         VENV_DIR='venv'
+        GCP_PROJECT = 'rare-bastion-464310-r6'
+        GCLOUD_PATH = "/var/jenkins_home/google-cloud-sdk/bin"
+        KUBECTL_AUTH_PLUGIN = "/usr/lib/google-cloud-sdk/bin"
     }
     stages{
         stage("Cloning from Github...."){
@@ -26,26 +29,63 @@ pipeline{
                 }
             }
         }
-        stage('DVC Pull') {
-            steps {
-                withCredentials([file(credentialsId: 'gcp-key', variable: 'GCP_SA_KEY')]) {
-                    script {
-                        echo 'Configuring DVC remote and pulling...'
-                        sh '''
-                        # Activate Virtual Env
-                        . ${VENV_DIR}/bin/activate
+        stage('DVC Pull'){
+            steps{
+                withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                    sh '''
+                        set +x  # Hide commands to prevent leaking secrets in logs (optional but good practice)
                         
-                        # Set Credentials
-                        export GOOGLE_APPLICATION_CREDENTIALS=$GCP_SA_KEY
+                        echo "--- Debugging Credentials ---"
+                        ls -l $GOOGLE_APPLICATION_CREDENTIALS
                         
-                        # --- THE FIX ---
-                        # Explicitly tell DVC where the bucket is.
-                        # -d sets it as default.
-                        # -f overwrites any existing broken config.
-                        dvc remote add -d -f storage gs://my-dvc-bucket988
+                        # Activate Virtual Environment
+                        . venv/bin/activate
                         
-                        # Now pull
+                        # CRITICAL FIX: Explicitly tell DVC where the key is
+                        # Note: Replace 'my-remote' with your actual DVC remote name. 
+                        # (Run 'dvc remote list' if you don't know it, usually it is 'storage' or 'origin')
+                        
+                        # We use --local so it only affects this specific CI run, not the git repo
+                        dvc remote modify --local my-dvc-bucket988 credentialpath $GOOGLE_APPLICATION_CREDENTIALS
+                        
+                        # Now run the pull
+                        echo "--- Pulling Data ---"
                         dvc pull
+                        
+                        # Run your python script
+                        python your_script.py
+                    '''
+                }
+            }
+        }
+        stage('Build and Push Image to GCR'){
+            steps{
+                withCredentials([file(credentialsId:'gcp-key' , variable: 'GOOGLE_APPLICATION_CREDENTIALS' )]){
+                    script{
+                        echo 'Build and Push Image to GCR'
+                        sh '''
+                        export PATH=$PATH:${GCLOUD_PATH}
+                        gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
+                        gcloud config set project ${GCP_PROJECT}
+                        gcloud auth configure-docker --quiet
+                        docker build -t gcr.io/${GCP_PROJECT}/ml-project:latest .
+                        docker push gcr.io/${GCP_PROJECT}/ml-project:latest
+                        '''
+                    }
+                }
+            }
+        }
+         stage('Deploying to Kubernetes'){
+            steps{
+                withCredentials([file(credentialsId:'gcp-key' , variable: 'GOOGLE_APPLICATION_CREDENTIALS' )]){
+                    script{
+                        echo 'Deploying to Kubernetes'
+                        sh '''
+                        export PATH=$PATH:${GCLOUD_PATH}:${KUBECTL_AUTH_PLUGIN}
+                        gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
+                        gcloud config set project ${GCP_PROJECT}
+                        gcloud container clusters get-credentials ml-app-cluster --region us-central1
+                        kubectl apply -f deployment.yaml
                         '''
                     }
                 }
