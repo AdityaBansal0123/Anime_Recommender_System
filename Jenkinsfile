@@ -28,7 +28,7 @@ pipeline{
         }
         stage('DVC Pull'){
             steps{
-                withCredentials([file(credentialsId: 'gcp-sa-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
                     sh '''
                         set +x  # Hide commands to prevent leaking secrets in logs (optional but good practice)
                         
