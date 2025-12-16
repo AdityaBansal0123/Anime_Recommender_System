@@ -6,3 +6,4 @@
     url = gs://my-dvc-bucket988/
 ['remote "gcsremote"']
     url = gs://my-dvc-bucket988
+    credentialpath = C:\Users\Aditya_Bansal\Downloads\rare-bastion-464310-r6-c0a3c89796e0.json

@@ -1,0 +1,269 @@
+/*
+   =================================
+   GLOBAL STYLES & FONT IMPORT
+   =================================
+*/
+
+/* Importing Google Fonts for an anime/comic feel */
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
+
+:root {
+    /* Color Palette: Neo-Tokyo / Cyberpunk */
+    --primary-color: #e91e63;   /* Neon Pink/Fuchsia (Accent 1) */
+    --secondary-color: #00e5ff; /* Neon Cyan (Accent 2) */
+    --background-dark: #12121e; /* Deep Black/Navy */
+    --card-background: #1e1e3f; /* Dark Purple/Card Base */
+    --text-light: #f0f0f0;      /* Light Grey Text */
+    --border-radius: 8px;
+    
+    /* Font Definitions */
+    --font-heading: 'Bangers', cursive; 
+    --font-title: 'Press Start 2P', cursive; /* Retro/Game title font */
+    --font-body: 'Roboto', sans-serif;
+}
+
+/* Base Body Styling */
+body {
+    font-family: var(--font-body);
+    color: var(--text-light);
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-dark);
+    
+    /* Background Image: Use a generic, atmospheric anime cityscape */
+    background-image: url('https://source.unsplash.com/1600x900/?cyberpunk,neon-city,anime-art'); 
+    background-size: cover;
+    background-attachment: fixed; 
+    background-position: center center;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.6;
+}
+
+/*
+   =================================
+   HEADER STYLES
+   =================================
+*/
+.anime-header {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.85); /* Very dark, semi-transparent header */
+    padding: 25px 0;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
+    margin-bottom: 40px;
+    border-bottom: 5px solid var(--primary-color);
+}
+
+.main-title {
+    font-family: var(--font-heading);
+    font-size: 4em;
+    color: var(--primary-color);
+    /* High-impact text effect */
+    text-shadow: 
+        -2px -2px 0 var(--secondary-color),
+        2px -2px 0 var(--secondary-color),
+        -2px 2px 0 var(--secondary-color),
+        2px 2px 0 var(--secondary-color),
+        0 0 15px var(--primary-color); /* Neon glow */
+    letter-spacing: 3px;
+    margin: 0;
+    animation: pulseGlow 4s infinite alternate;
+}
+
+/*
+   =================================
+   FORM & CONTAINER STYLES
+   =================================
+*/
+.form-container {
+    background: var(--card-background);
+    padding: 40px;
+    border-radius: var(--border-radius);
+    /* Dual neon border effect */
+    border: 3px solid var(--secondary-color);
+    box-shadow: 
+        0 0 15px rgba(0, 229, 255, 0.8), /* Cyan glow */
+        0 0 30px rgba(233, 30, 99, 0.6);  /* Pink glow */
+    max-width: 550px;
+    width: 90%;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.form-title {
+    font-family: var(--font-title);
+    font-size: 1.8em;
+    color: var(--secondary-color);
+    margin-top: 0;
+    border-bottom: 2px dotted var(--primary-color);
+    padding-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.form-subtitle {
+    font-size: 1.1em;
+    margin-bottom: 30px;
+    color: var(--text-light);
+}
+
+.recommendation-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    align-items: stretch;
+}
+
+.input-group {
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    color: var(--primary-color);
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(233, 30, 99, 0.5);
+}
+
+input[type="number"] {
+    width: 100%;
+    padding: 18px 15px;
+    border: 2px solid var(--secondary-color);
+    border-radius: 5px;
+    background-color: var(--background-dark);
+    color: var(--text-light);
+    font-size: 1.2em;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box; 
+    text-align: center;
+}
+
+input[type="number"]:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.8);
+    outline: none;
+    background-color: #0d0d1a;
+}
+
+/*
+   =================================
+   BUTTON STYLES
+   =================================
+*/
+.submit-button {
+    background-color: var(--primary-color);
+    color: var(--background-dark); /* Dark text on neon pink */
+    font-family: var(--font-heading);
+    font-size: 1.7em;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 50px; /* Pill shape */
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s;
+    box-shadow: 0 7px 0 #9c1440; /* 3D effect */
+    margin-top: 20px;
+    letter-spacing: 1px;
+}
+
+.submit-button:hover {
+    background-color: #ff4081;
+    box-shadow: 0 5px 0 #9c1440;
+}
+
+.submit-button:active {
+    background-color: #9c1440;
+    box-shadow: 0 2px 0 #9c1440;
+    transform: translateY(5px); /* Press down */
+}
+
+/*
+   =================================
+   RESULTS STYLES
+   =================================
+*/
+.results-container {
+    margin-top: 40px;
+    padding: 30px;
+    background: rgba(30, 30, 63, 0.95); /* Nearly opaque card background */
+    border-radius: var(--border-radius);
+    border: 1px solid var(--secondary-color);
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+    animation: fadeIn 1s ease-out; 
+}
+
+.results-header {
+    font-family: var(--font-title);
+    font-size: 1.5em;
+    color: var(--secondary-color);
+    margin-bottom: 20px;
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.7);
+}
+
+.recommendations-list {
+    list-style: none; 
+    padding: 0;
+    text-align: left;
+}
+
+.anime-item {
+    background: var(--background-dark);
+    border-left: 6px solid var(--primary-color);
+    padding: 12px 20px;
+    margin-bottom: 12px;
+    border-radius: 4px;
+    font-size: 1.15em;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s, background 0.2s;
+}
+
+.anime-item:hover {
+    transform: translateX(8px); /* Shift on hover to draw attention */
+    background: #1a1a2e; /* Slightly lighter background on hover */
+    color: var(--secondary-color);
+    cursor: default;
+}
+
+/*
+   =================================
+   FOOTER STYLES
+   =================================
+*/
+.anime-footer {
+    margin-top: 50px; 
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    color: #999;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 0.85em;
+    border-top: 2px solid var(--primary-color);
+}
+
+/*
+   =================================
+   KEYFRAME ANIMATIONS
+   =================================
+*/
+
+/* Fade in for results */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Subtle pulse for the main title glow */
+@keyframes pulseGlow {
+    0% { text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--secondary-color); }
+    100% { text-shadow: 0 0 15px var(--primary-color), 0 0 25px var(--secondary-color); }
+}
