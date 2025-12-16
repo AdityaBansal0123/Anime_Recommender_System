@@ -7,35 +7,31 @@ pipeline{
         KUBECTL_AUTH_PLUGIN = "/usr/lib/google-cloud-sdk/bin"
     }
     stages{
-        // stage("Cloning from Github...."){
-        //     steps{
-        //         script{
-        //             echo 'Cloning from Github....'
-        //             checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-token', url: 'https://github.com/AdityaBansal0123/Anime_Recommender_System.git']])
-        //         }
-        //     }
-        // }
-        // stage("making a virtual environment"){
-        //     steps{
-        //         script{
-        //             echo 'making a virtual environment'
-        //             sh '''
-        //             python -m venv ${VENV_DIR}
-        //             . ${VENV_DIR}/bin/activate
-        //             pip install --upgrade pip 
-        //             pip install -e .
-        //             pip install dvc
-        //             '''
-        //         }
-        //     }
-        // }
+        stage("Cloning from Github...."){
+            steps{
+                script{
+                    echo 'Cloning from Github....'
+                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-token', url: 'https://github.com/AdityaBansal0123/Anime_Recommender_System.git']])
+                }
+            }
+        }
+        stage("making a virtual environment"){
+            steps{
+                script{
+                    echo 'making a virtual environment'
+                    sh '''
+                    python -m venv ${VENV_DIR}
+                    . ${VENV_DIR}/bin/activate
+                    pip install --upgrade pip 
+                    pip install -e .
+                    pip install dvc
+                    '''
+                }
+            }
+        }
         stage('DVC Pull'){
             steps{
-<<<<<<< HEAD
-                withCredentials([file(credentialsId: 'gcp-sa-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
-=======
                 withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
->>>>>>> 253f7d66f526700d1ca3b7158b5219abe7e538c5
                     sh '''
                         set +x  # Hide commands to prevent leaking secrets in logs (optional but good practice)
                         
@@ -59,8 +55,6 @@ pipeline{
                         # Run your python script
                         python your_script.py
                     '''
-<<<<<<< HEAD
-=======
                 }
             }
         }
@@ -94,7 +88,6 @@ pipeline{
                         kubectl apply -f deployment.yaml
                         '''
                     }
->>>>>>> 253f7d66f526700d1ca3b7158b5219abe7e538c5
                 }
             }
         }
