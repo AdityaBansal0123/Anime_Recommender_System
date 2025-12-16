@@ -29,32 +29,22 @@ pipeline{
                 }
             }
         }
-        stage('DVC Pull'){
-            steps{
-                withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
-                    sh '''
-                        set +x  # Hide commands to prevent leaking secrets in logs (optional but good practice)
+        stage('DVC Pull') {
+            steps {
+                withCredentials([file(credentialsId: 'gcp-key', variable: 'GCP_SA_KEY')]) {
+                    script {
+                        echo 'Configuring DVC remote and pulling...'
+                        sh '''
+                        . ${VENV_DIR}/bin/activate
+                        export GOOGLE_APPLICATION_CREDENTIALS=$GCP_SA_KEY
                         
-                        echo "--- Debugging Credentials ---"
-                        ls -l $GOOGLE_APPLICATION_CREDENTIALS
+                        # --- THIS LINE MUST BE HERE ---
+                        dvc remote add -d -f storage gs://my-dvc-bucket988
+                        # ------------------------------
                         
-                        # Activate Virtual Environment
-                        . venv/bin/activate
-                        
-                        # CRITICAL FIX: Explicitly tell DVC where the key is
-                        # Note: Replace 'my-remote' with your actual DVC remote name. 
-                        # (Run 'dvc remote list' if you don't know it, usually it is 'storage' or 'origin')
-                        
-                        # We use --local so it only affects this specific CI run, not the git repo
-                        dvc remote modify --local my-dvc-bucket988 credentialpath $GOOGLE_APPLICATION_CREDENTIALS
-                        
-                        # Now run the pull
-                        echo "--- Pulling Data ---"
                         dvc pull
-                        
-                        # Run your python script
-                        python your_script.py
-                    '''
+                        '''
+                    }
                 }
             }
         }
